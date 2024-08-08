@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>StockAuto</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body class="app-wrapper">
+    <div class="upload-box">
+        <div class="app-title-wrapper">
+            <h3 class="app-title">Stock Auto!</h3>
+        </div>
+        <div class="upload-section">
+            <p>Upload your Excel file here:</p>
+            <input type="file" accept=".xlsx, .xls" class="form-file"/>
+            <input type="number" class="form-row-start" placeholder="Enter row start">
+            <input type="number" class="form-row-end" placeholder="Enter row end">
+            <button class="upload-button" onclick="uploadFile()">Upload</button>
+        </div>
+    </div>
+</body>
+</html>
