@@ -1,0 +1,6 @@
+env/
+.db
+*.ipynb
+__pycache__
+*.db
+*.txt
