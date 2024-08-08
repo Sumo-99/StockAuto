@@ -3,4 +3,4 @@ env/
 *.ipynb
 __pycache__
 *.db
-*.txt
+cmds.txt
