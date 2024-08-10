@@ -1,3 +1,5 @@
+const apiURL = "https://stockauto.onrender.com"
+
 const uploadFile = () => {
     console.log("Button click works!!!");
     const file = document.querySelector(".form-file").files[0];
@@ -9,7 +11,7 @@ const uploadFile = () => {
     formData.append('file', file);
     formData.append('row_start', rowStart);
     formData.append('row_end', rowEnd);
-    url = "http://127.0.0.1:8000/api/file/upload"
+    url = `${apiURL}/api/file/upload`
 
     // make POST call
     fetch(
@@ -71,7 +73,7 @@ const downloadFile = () => {
 
     // file_id = '3e679add-649d-474f-9f8d-ba0cd1ae4b21'
     // file_id = '32b92d2a-e957-45f8-9bb0-523bf7fdc7ee'
-    url = `http://127.0.0.1:8000/api/file/download/${file_id}`
+    url = `${apiURL}/api/file/download/${file_id}`
 
     // make GET call
     fetch(url)
