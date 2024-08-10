@@ -10,10 +10,31 @@ import os
 import time
 
 from api.local_file_api import get_file as get_file_data
+from api.database import SessionLocal, engine, Base
+from api.models_crud.local_file import LocalFileCrud
 
 router = APIRouter()
 
-def clear_folder(file_path):
+# SQL Lite DB config and setup
+Base.metadata.create_all(bind=engine)
+db = SessionLocal()
+file_handler = LocalFileCrud()
+
+def clear_folder(file_id, file_path):
+
+    file_data_response = get_file_data(file_id=file_id)  
+    if file_data_response.status_code != 200:
+        raise HTTPException(status_code=file_data_response.status_code, detail=file_data_response.content.decode())
+    file_data_response = json.loads(file_data_response.body)
+
+    ## Check if a deletion task has already been queued: if yes, we can exit this process, if no we update db to mark deletion_queued as true
+    if file_data_response["deletion_queued"]:
+        print(f"Deletion already triggered for file {file_id}")
+        return
+    else:
+        print(f"Updating deletion_trigger as True for file {file_id}")
+        file_handler.update_local_file(file_id, db, deletion_queued=True)
+
     path = os.path.dirname(file_path)
     if os.path.exists(path):
         print(f"Will commence deletion for {file_path} in 2 mins...")
@@ -32,8 +53,6 @@ def download_file(file_id: str, tasks: BackgroundTasks):
     if file_data_response.status_code != 200:
         raise HTTPException(status_code=file_data_response.status_code, detail=file_data_response.content.decode())
     
-    # print("file data raw repsonse --->", file_data_response)
-    # print("file data parsed repsonse --->", json.loads(file_data_response.body))
     file_data_response = json.loads(file_data_response.body)
 
     # Check if the file exists
@@ -58,7 +77,7 @@ def download_file(file_id: str, tasks: BackgroundTasks):
         }, status_code = 200)
     elif file_status == "failure":
         # File Cleanup
-        tasks.add_task(clear_folder, file_path)
+        tasks.add_task(clear_folder, file_id, file_path)
     
         return JSONResponse(content = {
             'status': file_status,
@@ -75,6 +94,6 @@ def download_file(file_id: str, tasks: BackgroundTasks):
         response_data["data"] = {"file": encoded_string}
 
         # File Cleanup
-        tasks.add_task(clear_folder, file_path)
+        tasks.add_task(clear_folder, file_id, file_path)
 
         return JSONResponse(content=response_data)

@@ -18,13 +18,14 @@ Base.metadata.create_all(bind=engine)
 db = SessionLocal()
 file_handler = LocalFileCrud()
 
-@router.get("/file/{file_id}")
+@router.get("/{file_id}")
 def get_file(file_id: str):
     file = file_handler.get_local_file(file_id, db)
     response = {
         'file_id': file.id,
         'status': file.status,
-        'path': file.path
+        'path': file.path,
+        'deletion_queued': file.deletion_queued
     }
     return JSONResponse(content=response)
 
@@ -49,6 +50,8 @@ async def update_file(file_id: str, request: Request):
     request_body = await request.json()
     status = request_body.get('status')
     path = request_body.get('path')
+    deletion_queued = request_body.get('deletion_queued')
+    print("deletion_queued", deletion_queued)
 
     # if not status or not path:
     #     raise HTTPException(
@@ -57,7 +60,7 @@ async def update_file(file_id: str, request: Request):
     #     )
 
     try:
-        updated_file = file_handler.update_local_file(file_id, db, status, path)
+        updated_file = file_handler.update_local_file(file_id, db, status, path, deletion_queued)
         return {"message": "File updated successfully", "file": updated_file}
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
