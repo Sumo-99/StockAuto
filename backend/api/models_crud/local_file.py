@@ -15,12 +15,14 @@ class LocalFileCrud():
         db.refresh(file)
         return file
     
-    def update_local_file(self, file_id: str, db: Session, status: str = None, path:str = None):
+    def update_local_file(self, file_id: str, db: Session, status: str = None, path:str = None, deletion_queued:bool = None):
         file = db.query(LocalFile).filter(LocalFile.id == file_id).first()
         if status:
             file.status = status
         if path:
             file.path = path
+        if deletion_queued != None:
+            file.deletion_queued = deletion_queued
         try:
             db.commit()
             db.refresh(file)
