@@ -12,6 +12,7 @@ const uploadFile = () => {
     formData.append('row_start', rowStart);
     formData.append('row_end', rowEnd);
     url = `${apiURL}/api/file/upload`
+    console.log("Request will be sent to: ", url);
 
     // make POST call
     fetch(
@@ -74,6 +75,7 @@ const downloadFile = () => {
     // file_id = '3e679add-649d-474f-9f8d-ba0cd1ae4b21'
     // file_id = '32b92d2a-e957-45f8-9bb0-523bf7fdc7ee'
     url = `${apiURL}/api/file/download/${file_id}`
+    console.log("Request will be sent to: ", url);
 
     // make GET call
     fetch(url)
