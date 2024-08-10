@@ -1,0 +1,12 @@
+# Exported from Render on 2024-08-10T07:37:58Z
+services:
+- type: web
+  name: StockAuto
+  runtime: python
+  repo: https://github.com/Sumo-99/StockAuto
+  plan: free
+  region: oregon
+  buildCommand: pip install -r requirements.txt
+  startCommand: uvicorn main:app --reload
+  rootDir: backend
+version: "1"
