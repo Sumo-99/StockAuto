@@ -58,6 +58,8 @@ def nav_master(file_id, src_path, row_start, row_end, isin_col, nav_col, old_nav
         # update dates
         print("Date update in progress...")
         old_date = sheet.cell(row=3,column=5).value
+        if isinstance(old_date, str):
+            old_date = datetime.strptime(old_date, "%d-%m-%Y")  
         old_date = old_date.strftime("%d-%m-%Y")
         sheet.cell(row=3, column=8).value = old_date
         new_date = datetime.today().strftime("%d-%m-%Y")
